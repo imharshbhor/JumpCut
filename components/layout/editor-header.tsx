@@ -32,7 +32,7 @@ export default function EditorHeader({ onReset }: EditorHeaderProps) {
     }, [])
 
     return (
-        <div className="h-[7.7vh] border-b bg-background flex items-center justify-end px-4">
+        <div className="h-[7.7vh] bg-gray-200/40 dark:bg-gray-800/40 flex items-center justify-end px-4">
    <div className="flex items-center space-x-2">
                 {/* Theme toggle button */}
                 {mounted && (

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
 import { addVideoFile, setThumbnail, setVideoDuration, setProcessingComplete, setSnapshots, setSnapshotsLoading, } from "@/lib/store/slices/videoSlice"
 import { generateThumbnail, generateVideoThumbnails } from "@/lib/utils/video-utils"
 import { Progress } from "@/components/ui/progress"
-import { Upload } from "lucide-react"
+import { Film } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function VideoUpload() {
@@ -25,56 +25,56 @@ export default function VideoUpload() {
         async (acceptedFiles: File[]) => {
             if (acceptedFiles.length === 0) return
 
-            // Process each file
-            for (const file of acceptedFiles) {
-                if (!file.type.startsWith("video/")) {
-                    alert("Please upload valid video files only")
-                    continue
-                }
+            // Only process the first file
+            const file = acceptedFiles[0]
 
-                // Create video URL first
-                const videoUrl = URL.createObjectURL(file)
-
-                // Prepare a more serializable version of the file
-                const videoItem = {
-                    id: `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                    file, // File object needed but will be ignored in serialization
-                    url: videoUrl,
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    lastModified: file.lastModified
-                }
-
-                // Add the video to the store
-                dispatch(addVideoFile(videoItem))
-
-                // Simulate upload progress
-                let progress = 0
-                const interval = setInterval(() => {
-                    progress += 5
-                    setUploadProgress(progress)
-                    if (progress >= 100) {
-                        clearInterval(interval)
-
-                        generateThumbnail(file).then((thumbnailUrl) => {
-                            dispatch(setThumbnail(thumbnailUrl))
-
-                            const video = document.createElement("video")
-                            video.preload = "metadata"
-                            video.src = videoUrl
-
-                            video.onloadedmetadata = async () => {
-                                dispatch(setVideoDuration(video.duration))
-
-                                const snapshots = await generateSnapshots(video)
-                                dispatch(setSnapshots(snapshots))
-                                dispatch(setProcessingComplete())
-                            }
-                        })
-                    }
-                }, 100)
+            if (!file.type.startsWith("video/")) {
+                alert("Please upload a valid video file")
+                return
             }
+
+            // Create video URL first
+            const videoUrl = URL.createObjectURL(file)
+
+            // Prepare a more serializable version of the file
+            const videoItem = {
+                id: `video-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                file, // File object needed but will be ignored in serialization
+                url: videoUrl,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                lastModified: file.lastModified
+            }
+
+            // Add the video to the store
+            dispatch(addVideoFile(videoItem))
+
+            // Simulate upload progress
+            let progress = 0
+            const interval = setInterval(() => {
+                progress += 5
+                setUploadProgress(progress)
+                if (progress >= 100) {
+                    clearInterval(interval)
+
+                    generateThumbnail(file).then((thumbnailUrl) => {
+                        dispatch(setThumbnail(thumbnailUrl))
+
+                        const video = document.createElement("video")
+                        video.preload = "metadata"
+                        video.src = videoUrl
+
+                        video.onloadedmetadata = async () => {
+                            dispatch(setVideoDuration(video.duration))
+
+                            const snapshots = await generateSnapshots(video)
+                            dispatch(setSnapshots(snapshots))
+                            dispatch(setProcessingComplete())
+                        }
+                    })
+                }
+            }, 100)
         },
         [dispatch]
     )
@@ -94,7 +94,7 @@ export default function VideoUpload() {
         accept: {
             "video/*": [],
         },
-        // Remove maxFiles to allow multiple files
+        maxFiles: 1, // Limit to a single file
         disabled: isProcessing,
     })
 
@@ -106,9 +106,9 @@ export default function VideoUpload() {
                     }`}
             >
                 <input {...getInputProps()} />
-                <Upload className="mx-auto h-8 w-8 text-gray-300" />
-                <p className="mt-2 text- text-gray-500">
-                    {isDragActive ? "Drop the videos here" : "Drag & drop video files here"}
+                <Film className="mx-auto h-8 w-8 text-gray-300" />
+                <p className="mt-2 text-sm text-gray-400">
+                    {isDragActive ? "Drop the video here" : "Drag & drop a video file here or click to upload"}
                 </p>
             </div>
 

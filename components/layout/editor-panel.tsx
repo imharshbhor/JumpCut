@@ -1,12 +1,11 @@
 "use client"
 
 import { useAppSelector } from "@/lib/store/hooks"
-// import { ScrollArea } from "@/components/ui/scroll-area"
-import AudioManager from "@/components/audio/audio-manager"
-import SubtitleEditor from "@/components/subtitles/subtitle-editor"
-import ImageOverlayEditor from "@/components/overlays/image-overlay-editor"
-// import ExportPanel from "@/components/export/export-panel"
-import MediaPanel from "@/components/media/media-panel"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import AudioManager from "@/components/audio/audio-panel"
+import SubtitleEditor from "@/components/subtitles/subtitle-panel"
+import ImageOverlayEditor from "@/components/image/image-panel"
+import VideoPanel from "@/components/video/video-panel"
 
 interface EditorPanelProps {
     activePanel: string
@@ -15,7 +14,7 @@ interface EditorPanelProps {
 export default function EditorPanel({ activePanel }: EditorPanelProps) {
     const { videoUrl } = useAppSelector((state) => state.video)
 
-    if (!videoUrl && activePanel !== "media") {
+    if (!videoUrl && activePanel !== "video") {
         return (
             <div className="w-80 border-r bg-background p-4 flex flex-col">
                 <div className="flex-1 flex items-center justify-center text-center p-4 text-gray-500">
@@ -28,11 +27,11 @@ export default function EditorPanel({ activePanel }: EditorPanelProps) {
     }
 
     return (
-        <div className="w-72 border-r pr-3 pt-[9.5vh] bg-background flex flex-col">
+        <div className="w-80 border-r px-3 pt-5 bg-background flex flex-col">
             {/* <div className="p-3">
                 <h2 className="text-xl tracking-tighter font-semibold mb-[0.6rem] capitalize">
-                    {activePanel === "media"
-                        ? "Media Library"
+                    {activePanel === "video"
+                        ? "Video Library"
                         : activePanel === "text"
                             ? "Text & Captions"
                             : activePanel === "image"
@@ -43,15 +42,14 @@ export default function EditorPanel({ activePanel }: EditorPanelProps) {
                 </h2>
             </div> */}
 
-            {/* <ScrollArea className="flex-1"> */}
-            <div className="p-2">
-                {activePanel === "media" && <MediaPanel />}
-                {activePanel === "text" && <SubtitleEditor />}
-                {activePanel === "image" && <ImageOverlayEditor />}
-                {activePanel === "audio" && <AudioManager />}
-                {/* {activePanel === "export" && <ExportPanel />} */}
-            </div>
-            {/* </ScrollArea> */}
+            <ScrollArea className="flex-1">
+                <div className="p-1">
+                    {activePanel === "video" && <VideoPanel />}
+                    {activePanel === "text" && <SubtitleEditor />}
+                    {activePanel === "image" && <ImageOverlayEditor />}
+                    {activePanel === "audio" && <AudioManager />}
+                </div>
+            </ScrollArea>
         </div>
     )
 }

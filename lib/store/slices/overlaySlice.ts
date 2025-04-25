@@ -10,6 +10,15 @@ export interface ImageOverlay {
   startTime: number
   endTime: number
   zIndex: number
+  border?: {
+    width: number
+    color: string
+    style: string
+  }
+  animation?: {
+    type: string
+    duration: number
+  }
 }
 
 export interface TextOverlay {

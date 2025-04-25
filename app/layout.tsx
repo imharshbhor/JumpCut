@@ -8,22 +8,22 @@ import { ReduxProvider } from "@/lib/store/provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "JumpCut - Online Video Editor",
-  description: "A web-based video editing tool"
+    title: "JumpCut - Online Video Editor",
+    description: "A web-based video editing tool"
 }
 
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode
+    children: React.ReactNode
 }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <ReduxProvider>{children}</ReduxProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  )
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+                <ThemeProvider attribute="class" defaultTheme="dark">
+                    <ReduxProvider>{children}</ReduxProvider>
+                </ThemeProvider>
+            </body>
+        </html>
+    )
 }

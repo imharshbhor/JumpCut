@@ -27,7 +27,7 @@ function VideoItem({ id, thumbnail, name, size, isActive, onRemove, onSelect }: 
     return (
         <div
             style={style}
-            className="media-item rounded-md overflow-hidden border bg-background relative group cursor-pointer"
+            className="video-item rounded-md overflow-hidden border bg-background relative group cursor-pointer"
             onClick={onSelect}
         >
             <div className="aspect-video relative">
@@ -60,11 +60,10 @@ function VideoItem({ id, thumbnail, name, size, isActive, onRemove, onSelect }: 
     )
 }
 
-export default function MediaPanel() {
+export default function VideoPanel() {
     const dispatch = useAppDispatch()
     const { videos, activeVideoId } = useAppSelector((state) => state.video)
     const { images } = useAppSelector((state) => state.overlay)
-    const [showUpload, setShowUpload] = useState(videos.length === 0)
 
     const handleRemoveVideo = (id: string) => {
         dispatch(removeVideo(id))
@@ -76,29 +75,15 @@ export default function MediaPanel() {
 
     return (
         <div className="space-y-4">
-            {showUpload ? (
-                <div className="space-y-4">
-                    <VideoUpload />
-                    {videos.length > 0 && (
-                        <Button variant="outline" size="sm" className="w-full" onClick={() => setShowUpload(false)}>
-                            Close Upload
-                        </Button>
-                    )}
+            <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                    <Film className="h-5 w-5 text-muted-foreground" />
+                    <h2 className="text-lg font-medium">Video Manager</h2>
                 </div>
-            ) : (
-                <Button className="w-full" onClick={() => setShowUpload(true)}>
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload Media
-                </Button>
-            )}
+                <VideoUpload />
+            </div>
 
             <Tabs defaultValue="videos">
-                {/* <TabsList className="grid bg-secondary w-full grid-cols-3">
-                    <TabsTrigger value="videos">Videos</TabsTrigger>
-                    <TabsTrigger value="images">Images</TabsTrigger>
-                    <TabsTrigger value="audio">Audio</TabsTrigger>
-                </TabsList> */}
-
                 <TabsContent value="videos" className="mt-4">
                     <ScrollArea className="h-[400px]">
                         <div className="grid grid-cols-2 gap-3">
@@ -123,52 +108,6 @@ export default function MediaPanel() {
                                     </div>
                                 </div>
                             )}
-                        </div>
-                    </ScrollArea>
-                </TabsContent>
-
-                <TabsContent value="images" className="mt-4">
-                    <ScrollArea className="h-[400px]">
-                        <div className="grid grid-cols-2 gap-3">
-                            {images.length > 0 ? (
-                                images.map((image) => (
-                                    <div key={image.id} className="media-item rounded-md overflow-hidden border bg-background">
-                                        <div className="aspect-video relative">
-                                            <img
-                                                src={image.url || "/placeholder.svg"}
-                                                alt="Image overlay"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="p-2">
-                                            <p className="text-xs font-medium truncate">Image Overlay</p>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="aspect-video border rounded-md flex items-center justify-center bg-background text-gray-400">
-                                <div className="text-center">
-                                    <ImageIcon className="h-8 w-8 mx-auto mb-1" />
-                                    <p className="text-xs">No images</p>
-                                </div>
-                            </div>
-                            )}
-                        </div>
-                    </ScrollArea>
-                </TabsContent>
-
-                <TabsContent value="audio" className="mt-4">
-                    <ScrollArea className="h-[400px]">
-                        <div className="grid grid-cols-2 gap-3">
-                            {/* Changed from grid-cols-1 to grid-cols-2 to match other tabs */}
-                            <div className="media-item rounded-md overflow-hidden border bg-background relative group cursor-pointer">
-                            <div className="aspect-video rounded-md flex items-center justify-center bg-background text-gray-400">
-                                <div className="text-center">
-                                    <Music className="h-8 w-8 mx-auto mb-1" />
-                                    <p className="text-xs">No audios</p>
-                                </div>
-                            </div>
-                            </div>
                         </div>
                     </ScrollArea>
                 </TabsContent>

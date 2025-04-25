@@ -244,7 +244,7 @@ export default function Timeline() {
         }
     };
 
-    return (
+        return (
         <div className="w-full">
             {/* Timeline Controls */}
             <TimelineControls
@@ -256,7 +256,7 @@ export default function Timeline() {
             {/* Timeline */}
             <div
                 ref={timelineRef}
-                className="relative w-full overflow-x-auto bg-background"
+                className="relative rounded-lg w-full overflow-x-auto bg-background"
                 style={{ height: '186px' }}
                 onClick={handleTimelineClick}
             >
@@ -271,9 +271,9 @@ export default function Timeline() {
                     <VideoTrack
                         sections={sections}
                         snapshots={snapshots}
-                        duration={duration}
+                            duration={duration}
                         onDragStart={handleDragStart}
-                        onResizeStart={handleSectionResizeStart}
+                            onResizeStart={handleSectionResizeStart}
                         onRemoveSection={handleRemoveSection}
                         activeDragId={activeDragId}
                     />
@@ -282,7 +282,7 @@ export default function Timeline() {
                     <AudioTrack
                         audioSections={audioSections}
                         duration={duration}
-                        onDragStart={handleDragStart}
+            onDragStart={handleDragStart}
                         onResizeStart={handleSectionResizeStart}
                         onRemoveSection={handleRemoveSection}
                         activeDragId={activeDragId}

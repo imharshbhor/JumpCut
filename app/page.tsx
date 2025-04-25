@@ -18,12 +18,12 @@ import { Loader2 } from "lucide-react"
 
 export default function VideoEditor() {
     const dispatch = useAppDispatch()
-    const [activePanel, setActivePanel] = useState<string>("media")
+    const [activePanel, setActivePanel] = useState<string>("video")
     const { videoUrl, snapshots, snapshotsLoading } = useAppSelector((state) => state.video)
 
     useEffect(() => {
-        if (!videoUrl && activePanel !== "media") {
-            setActivePanel("media")
+        if (!videoUrl && activePanel !== "video") {
+            setActivePanel("video")
         }
     }, [videoUrl, activePanel])
 
@@ -41,11 +41,11 @@ export default function VideoEditor() {
     return (
         <div className="flex h-screen bg-background overflow-hidden" style={{ userSelect: 'none' }}>
             <Sidebar activePanel={activePanel} setActivePanel={setActivePanel} />
-                        <EditorPanel activePanel={activePanel} />
+            <EditorPanel activePanel={activePanel} />
             <div className="flex flex-col flex-1 overflow-hidden">
                 <EditorHeader onReset={handleReset} />
                 <div className="flex flex-1 overflow-hidden">
-                    <div className="flex flex-col flex-1 overflow-hidden p-4">
+                    <div className="flex flex-col flex-1 overflow-hidden px-4 bg-gray-200/40 dark:bg-gray-800/40">
                         {snapshotsLoading ? (
                             <div className="flex flex-col flex-1 items-center justify-center">
                                 <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
