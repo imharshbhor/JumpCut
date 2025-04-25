@@ -8,10 +8,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import VideoUpload from "./video-upload"
 import { Film, ImageIcon, Music, Trash2, Upload, Video } from "lucide-react"
 import { setActiveVideo, removeVideo } from "@/lib/store/slices/videoSlice"
-import { useDraggable } from "@dnd-kit/core"
-import { CSS } from "@dnd-kit/utilities"
 
-interface DraggableVideoItemProps {
+interface VideoItemProps {
     id: string
     thumbnail: string | null | undefined
     name: string
@@ -21,36 +19,16 @@ interface DraggableVideoItemProps {
     onSelect: () => void
 }
 
-function DraggableVideoItem({ id, thumbnail, name, size, isActive, onRemove, onSelect }: DraggableVideoItemProps) {
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-        id: id,
-        data: {
-            type: 'video',
-            id: id,
-            name: name,
-            thumbnail: thumbnail,
-            size: size
-        }
-    })
-
+function VideoItem({ id, thumbnail, name, size, isActive, onRemove, onSelect }: VideoItemProps) {
     const style = {
-        transform: CSS.Transform.toString(transform),
-        border: isActive ? '2px solid #3b82f6' : '',
-        opacity: isDragging ? 0.5 : 1,
-        zIndex: isDragging ? 999 : 1
+        border: isActive ? '2px solid #3b82f6' : ''
     }
 
     return (
         <div
-            ref={setNodeRef}
             style={style}
-            className="media-item rounded-md overflow-hidden border bg-gray-50 relative group cursor-move touch-manipulation"
-            onClick={(e) => {
-                e.stopPropagation();
-                onSelect();
-            }}
-            {...listeners}
-            {...attributes}
+            className="media-item rounded-md overflow-hidden border bg-background relative group cursor-pointer"
+            onClick={onSelect}
         >
             <div className="aspect-video relative">
                 <img
@@ -115,18 +93,18 @@ export default function MediaPanel() {
             )}
 
             <Tabs defaultValue="videos">
-                <TabsList className="grid w-full grid-cols-3">
+                {/* <TabsList className="grid bg-secondary w-full grid-cols-3">
                     <TabsTrigger value="videos">Videos</TabsTrigger>
                     <TabsTrigger value="images">Images</TabsTrigger>
                     <TabsTrigger value="audio">Audio</TabsTrigger>
-                </TabsList>
+                </TabsList> */}
 
                 <TabsContent value="videos" className="mt-4">
                     <ScrollArea className="h-[400px]">
                         <div className="grid grid-cols-2 gap-3">
                             {videos.length > 0 ? (
                                 videos.map((video) => (
-                                    <DraggableVideoItem
+                                    <VideoItem
                                         key={video.id}
                                         id={video.id}
                                         thumbnail={video.thumbnail}
@@ -138,7 +116,7 @@ export default function MediaPanel() {
                                     />
                                 ))
                             ) : (
-                                <div className="aspect-video rounded-md border flex items-center justify-center bg-gray-50 text-gray-400">
+                                <div className="aspect-video rounded-md border flex items-center justify-center bg-background text-gray-400">
                                     <div className="text-center">
                                         <Film className="h-8 w-8 mx-auto mb-1" />
                                         <p className="text-xs">No videos</p>
@@ -150,11 +128,11 @@ export default function MediaPanel() {
                 </TabsContent>
 
                 <TabsContent value="images" className="mt-4">
-                    <ScrollArea className="h-[400px] pr-4">
+                    <ScrollArea className="h-[400px]">
                         <div className="grid grid-cols-2 gap-3">
                             {images.length > 0 ? (
                                 images.map((image) => (
-                                    <div key={image.id} className="media-item rounded-md overflow-hidden border bg-gray-50">
+                                    <div key={image.id} className="media-item rounded-md overflow-hidden border bg-background">
                                         <div className="aspect-video relative">
                                             <img
                                                 src={image.url || "/placeholder.svg"}
@@ -168,25 +146,28 @@ export default function MediaPanel() {
                                     </div>
                                 ))
                             ) : (
-                                <div className="aspect-video rounded-md border flex items-center justify-center bg-gray-50 text-gray-400">
-                                    <div className="text-center">
-                                        <ImageIcon className="h-8 w-8 mx-auto mb-1" />
-                                        <p className="text-xs">No images</p>
-                                    </div>
+                                <div className="aspect-video border rounded-md flex items-center justify-center bg-background text-gray-400">
+                                <div className="text-center">
+                                    <ImageIcon className="h-8 w-8 mx-auto mb-1" />
+                                    <p className="text-xs">No images</p>
                                 </div>
+                            </div>
                             )}
                         </div>
                     </ScrollArea>
                 </TabsContent>
 
                 <TabsContent value="audio" className="mt-4">
-                    <ScrollArea className="h-[400px] pr-4">
-                        <div className="grid grid-cols-1 gap-3">
-                            <div className="aspect-video rounded-md border flex items-center justify-center bg-gray-50 text-gray-400">
+                    <ScrollArea className="h-[400px]">
+                        <div className="grid grid-cols-2 gap-3">
+                            {/* Changed from grid-cols-1 to grid-cols-2 to match other tabs */}
+                            <div className="media-item rounded-md overflow-hidden border bg-background relative group cursor-pointer">
+                            <div className="aspect-video rounded-md flex items-center justify-center bg-background text-gray-400">
                                 <div className="text-center">
                                     <Music className="h-8 w-8 mx-auto mb-1" />
-                                    <p className="text-xs">No audio files</p>
+                                    <p className="text-xs">No audios</p>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </ScrollArea>

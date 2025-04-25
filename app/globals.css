@@ -33,10 +33,19 @@
     --ring: 262 83% 58%;
 
     --radius: 0.5rem;
+
+    /* Timeline specific variables */
+    --timeline-bg: 0 0% 95%;
+    --timeline-control-bg: 0 0% 100%;
+    --timeline-track-bg: 240 5% 10%;
+    --timeline-section-bg: 262 83% 58%;
+    --timeline-section-border: 262 83% 65%;
+    --timeline-marker: 0 0% 70%;
+    --timeline-marker-text: 0 0% 30%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 218, 100%, 6%;
     --foreground: 210 40% 98%;
 
     --card: 222.2 84% 4.9%;
@@ -45,8 +54,8 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 262 83% 58%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 217 100% 62%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -63,7 +72,17 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 262 83% 58%;
+
+    /* Timeline specific variables for dark mode */
+    --timeline-bg: 222 47% 11%;
+    --timeline-control-bg: 222 47% 11%;
+    --timeline-track-bg: 240 10% 3.9%;
+    --timeline-section-bg: 262 83% 40%;
+    --timeline-section-border: 262 83% 50%;
+    --timeline-marker: 0 0% 40%;
+    --timeline-marker-text: 0 0% 70%;
   }
+
   .theme {
     --animate-aurora: aurora 8s ease-in-out infinite alternate;
   }
@@ -78,27 +97,37 @@
   }
 }
 
+/* Timeline styles */
+.timeline-container {
+  background-color: hsl(var(--timeline-bg));
+}
+
+.timeline-controls {
+  background-color: hsl(var(--timeline-control-bg));
+}
+
+.timeline-track {
+  background-color: hsl(var(--timeline-track-bg));
+}
+
+.timeline-section {
+  background-color: hsl(var(--timeline-section-bg) / 0.7);
+  border-color: hsl(var(--timeline-section-border));
+}
+
+.timeline-marker {
+  background-color: hsl(var(--timeline-marker));
+  color: hsl(var(--timeline-marker-text));
+}
+
 .timeline-track {
   height: 80px;
   background-image: repeating-linear-gradient(to right, #f1f5f9 0px, #f1f5f9 40px, #e2e8f0 40px, #e2e8f0 80px);
   background-size: 80px 100%;
 }
 
-.waveform-container {
-  position: relative;
-  height: 30px;
-  width: 100%;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.waveform-bar {
-  position: absolute;
-  bottom: 0;
-  width: 3px;
-  margin-right: 1px;
-  background-color: #0060d6;
-  border-radius: 1px 1px 0 0;
+.dark .timeline-track {
+  background-image: repeating-linear-gradient(to right, #1a1a1a 0px, #1a1a1a 40px, #252525 40px, #252525 80px);
 }
 
 .resizable-image {
@@ -147,6 +176,11 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+.dark .editor-panel {
+  background-color: #1e293b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
 .media-item {
   transition: all 0.2s ease;
 }
@@ -158,6 +192,10 @@
 
 .sidebar-section {
   border-bottom: 1px solid #e2e8f0;
+}
+
+.dark .sidebar-section {
+  border-bottom: 1px solid #334155;
 }
 
 .sidebar-section:last-child {
@@ -189,23 +227,56 @@
   }
 }
 
+/* Light mode scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-track {
-  background: #e5f1ff;
+  background: #ffffff;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #0060d6;
+  background: #d1d5db;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #9ca3af;
+  cursor: pointer;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #999;
+  background: #6366f1;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+.dark ::-webkit-scrollbar-thumb:active {
+  background: #818cf8;
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3b82f6 #f1f5f9;
+}
+
+.dark * {
+  scrollbar-color: #4b5563 #1f2937;
 }

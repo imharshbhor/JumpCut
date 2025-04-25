@@ -18,7 +18,7 @@ const initialState: TimelineState = {
   scenes: [],
   currentTime: 0,
   isPlaying: false,
-  zoom: 1,
+  zoom: 0.5,
 }
 
 const timelineSlice = createSlice({

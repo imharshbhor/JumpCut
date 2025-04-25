@@ -39,7 +39,7 @@ export default function VideoEditor() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden" style={{ userSelect: 'none' }}>
+        <div className="flex h-screen bg-background overflow-hidden" style={{ userSelect: 'none' }}>
             <Sidebar activePanel={activePanel} setActivePanel={setActivePanel} />
                         <EditorPanel activePanel={activePanel} />
             <div className="flex flex-col flex-1 overflow-hidden">

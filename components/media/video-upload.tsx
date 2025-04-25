@@ -106,12 +106,9 @@ export default function VideoUpload() {
                     }`}
             >
                 <input {...getInputProps()} />
-                <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                <p className="mt-2 text- text-gray-600">
+                <Upload className="mx-auto h-8 w-8 text-gray-300" />
+                <p className="mt-2 text- text-gray-500">
                     {isDragActive ? "Drop the videos here" : "Drag & drop video files here"}
-                </p>
-                <p className="text-xs text-gray-500">
-                    You can upload multiple videos
                 </p>
             </div>
 

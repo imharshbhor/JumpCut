@@ -26,57 +26,56 @@ export default function Sidebar({ activePanel, setActivePanel }: SidebarProps) {
     }
 
     return (
-        <div className="w-36 bg-white border-r flex flex-col h-full">
-            <div className="p-[0.85rem]">
-                <h1 className="text-2xl ml-[1rem] mt-2 font-bold flex items-center tracking-tighter">
-                    Move<AuroraText colors={["#3894ff", "#80baff", "#8b5cf6"]}>37</AuroraText>
+        <div className="bg-background flex flex-col h-full">
+            <div className="p-5">
+                <h1 className="text-2xl font-bold flex items-center tracking-tighter">
+                    Jump<AuroraText colors={["#3894ff", "#80baff", "#8b5cf6"]}>Cut</AuroraText>
                 </h1>
             </div>
 
-            <div className="flex flex-col flex-1 overflow-hidden">
-                <div className="p-4 sidebar-section">
-                    {/* <h2 className="text-sm font-medium mb-2">Create</h2> */}
-                    <div className="space-y-1">
+            <div className="flex flex-col overflow-hidden">
+                <div className="px-6 py-2">
+                    <div className="space-y-2">
                         <Button
                             variant={activePanel === "media" ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            className="flex flex-col h-16 w-full items-center justify-center"
                             onClick={() => handlePanelChange("media")}
                         >
-                            <Film className="mr-2 h-4 w-4" />
-                            Media
+                            <Film />
+                            <span className="text-sm">Media</span>
                         </Button>
                         <Button
                             variant={activePanel === "text" ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            className="flex flex-col h-16 w-full items-center justify-center"
                             onClick={() => handlePanelChange("text")}
                         >
-                            <Type className="mr-2 h-4 w-4" />
-                            Text
+                            <Type className="h-6 w-6 mb-1" />
+                            <span className="text-xs">Text</span>
                         </Button>
                         <Button
                             variant={activePanel === "image" ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            className="flex flex-col h-16 w-full items-center justify-center"
                             onClick={() => handlePanelChange("image")}
                         >
-                            <ImageIcon className="mr-2 h-4 w-4" />
-                            Images
+                            <ImageIcon className="h-6 w-6 mb-1" />
+                            <span className="text-xs">Images</span>
                         </Button>
                         <Button
                             variant={activePanel === "audio" ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            className="flex flex-col h-16 w-full items-center justify-center"
                             onClick={() => handlePanelChange("audio")}
                         >
-                            <Music className="mr-2 h-4 w-4" />
-                            Audio
+                            <Music className="h-6 w-6 mb-1" />
+                            <span className="text-xs">Audio</span>
                         </Button>
-                        <Button
+                        {/* <Button
                             variant={activePanel === "export" ? "secondary" : "ghost"}
-                            className="w-full justify-start"
+                            className="flex flex-col h-16 w-full items-center justify-center"
                             onClick={() => handlePanelChange("export")}
                         >
-                            <Layers className="mr-2 h-4 w-4" />
-                            Export
-                        </Button>
+                            <Layers className="h-6 w-6 mb-1" />
+                            <span className="text-xs">Export</span>
+                        </Button> */}
                     </div>
                 </div>
             </div>

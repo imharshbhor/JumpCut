@@ -8,7 +8,7 @@ import { ReduxProvider } from "@/lib/store/provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Move37 - Online Video Editor",
+  title: "JumpCut - Online Video Editor",
   description: "A web-based video editing tool"
 }
 
