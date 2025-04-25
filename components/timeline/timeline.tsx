@@ -72,13 +72,16 @@ export default function Timeline() {
 
     // Get time from mouse position helper function
     const getTimeFromMousePosition = (clientX: number): number => {
-        if (!timelineRef.current) return 0
-        const timeline = timelineRef.current
-        const rect = timeline.getBoundingClientRect()
-        const offsetX = clientX - rect.left
-        const widthRatio = offsetX / timeline.clientWidth
-        return widthRatio * duration
-    }
+        const timelineEl = timelineRef.current;
+        if (!timelineEl) return 0;
+
+        const rect = timelineEl.getBoundingClientRect();
+        const offsetX = clientX - rect.left + timelineEl.scrollLeft;
+        const scrollableWidth = timelineEl.scrollWidth;
+        const relativeX = offsetX / scrollableWidth;
+
+        return relativeX * duration;
+      };
 
     // Initialize video refs
     useEffect(() => {
