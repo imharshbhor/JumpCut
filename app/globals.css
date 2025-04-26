@@ -34,7 +34,6 @@
 
     --radius: 0.5rem;
 
-    /* Timeline specific variables */
     --timeline-bg: 0 0% 95%;
     --timeline-control-bg: 0 0% 100%;
     --timeline-track-bg: 240 5% 10%;
@@ -73,7 +72,6 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 262 83% 58%;
 
-    /* Timeline specific variables for dark mode */
     --timeline-bg: 222 47% 11%;
     --timeline-control-bg: 222 47% 11%;
     --timeline-track-bg: 240 10% 3.9%;
@@ -97,7 +95,6 @@
   }
 }
 
-/* Timeline styles */
 .timeline-container {
   background-color: hsl(var(--timeline-bg));
 }
@@ -130,7 +127,6 @@
   background-image: repeating-linear-gradient(to right, #1a1a1a 0px, #1a1a1a 40px, #252525 40px, #252525 80px);
 }
 
-/* Resizable image styles */
 .resizable-image {
   position: absolute;
   cursor: move;
@@ -247,7 +243,6 @@
   }
 }
 
-/* Light mode scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -274,7 +269,6 @@
   background: #6366f1;
 }
 
-/* Dark mode scrollbar */
 .dark ::-webkit-scrollbar-track {
   background: #1f2937;
 }
@@ -301,7 +295,6 @@
   scrollbar-color: #4b5563 #1f2937;
 }
 
-/* Animation classes for overlays */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }

@@ -16,11 +16,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
         ignoredActions: ['video/setVideoFile', 'video/addVideoFile'],
-        // Ignore these field paths in all actions
         ignoredActionPaths: ['payload.file', 'meta.arg'],
-        // Ignore these paths in the state
         ignoredPaths: ['video.videoFile', 'video.videos'],
       },
     }),

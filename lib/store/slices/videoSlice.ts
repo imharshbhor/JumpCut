@@ -15,8 +15,8 @@ export interface VideoItem {
 export interface VideoState {
     videos: VideoItem[];
     activeVideoId: string | null;
-    videoFile: File | null; // Keep for backward compatibility
-    videoUrl: string | null; // Keep for backward compatibility
+    videoFile: File | null;
+    videoUrl: string | null;
     snapshots: [] | null;
     snapshotsLoading: boolean,
     waveform: [] | null;
@@ -50,7 +50,6 @@ const videoSlice = createSlice({
         addVideoFile: (state, action: PayloadAction<VideoItem>) => {
             state.videos.push(action.payload);
 
-            // For backward compatibility
             if (!state.videoFile) {
                 state.videoFile = action.payload.file;
                 state.videoUrl = action.payload.url;
@@ -75,11 +74,9 @@ const videoSlice = createSlice({
         removeVideo: (state, action: PayloadAction<string>) => {
             const index = state.videos.findIndex(v => v.id === action.payload);
             if (index !== -1) {
-                // Revoke URL to prevent memory leaks
                 URL.revokeObjectURL(state.videos[index].url);
                 state.videos.splice(index, 1);
 
-                // If we removed the active video, set a new active video
                 if (state.activeVideoId === action.payload) {
                     if (state.videos.length > 0) {
                         state.activeVideoId = state.videos[0].id;
@@ -100,7 +97,6 @@ const videoSlice = createSlice({
         setVideoDuration: (state, action: PayloadAction<number>) => {
             state.duration = action.payload;
 
-            // Update the duration for the active video as well
             if (state.activeVideoId) {
                 const video = state.videos.find(v => v.id === state.activeVideoId);
                 if (video) {
@@ -121,7 +117,6 @@ const videoSlice = createSlice({
         setThumbnail: (state, action: PayloadAction<string>) => {
             state.thumbnail = action.payload;
 
-            // Update the thumbnail for the active video as well
             if (state.activeVideoId) {
                 const video = state.videos.find(v => v.id === state.activeVideoId);
                 if (video) {
@@ -133,7 +128,6 @@ const videoSlice = createSlice({
             state.waveform = action.payload;
         },
         resetVideo: (state) => {
-            // Revoke all object URLs to prevent memory leaks
             if (state.videoUrl) URL.revokeObjectURL(state.videoUrl);
             state.videos.forEach(video => URL.revokeObjectURL(video.url));
             return initialState;

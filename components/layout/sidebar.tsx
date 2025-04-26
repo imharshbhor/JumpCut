@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Film, ImageIcon, Type, Music } from "lucide-react"
-import { AuroraText } from "../magicui/aurora-text"
+import { AuroraText } from "../ui/aurora-text"
 
 interface SidebarProps {
     activePanel: string
@@ -58,14 +58,6 @@ export default function Sidebar({ activePanel, setActivePanel }: SidebarProps) {
                             <Music className="!h-6 !w-6" />
                             <span className="text-xs">Audio</span>
                         </Button>
-                        {/* <Button
-                            variant={activePanel === "export" ? "secondary" : "ghost"}
-                            className="flex flex-col h-18 w-full items-center justify-center"
-                            onClick={() => handlePanelChange("export")}
-                        >
-                            <Layers className="!h-6 !w-6" />
-                            <span className="text-xs">Export</span>
-                        </Button> */}
                     </div>
                 </div>
             </div>

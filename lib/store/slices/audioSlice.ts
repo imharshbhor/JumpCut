@@ -5,10 +5,10 @@ export interface AudioTrack {
   name: string
   url: string
   startTime: number
-  endTime: number
-  volume: number
-  isMuted: boolean
-  waveform: number[] // Mock waveform data
+  endTime: number;
+  volume: number;
+  isMuted: boolean;
+  waveform: number[];
 }
 
 export interface AudioState {

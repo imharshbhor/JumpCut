@@ -1,10 +1,9 @@
 export const generateThumbnail = async (videoFile: File): Promise<string> => {
   return new Promise((resolve) => {
-    // Mock thumbnail generation
     const video = document.createElement("video")
     video.preload = "metadata"
     video.src = URL.createObjectURL(videoFile)
-    video.currentTime = 1 // Seek to 1 second
+    video.currentTime = 1
 
     video.onloadeddata = () => {
       const canvas = document.createElement("canvas")
@@ -23,7 +22,7 @@ export const generateVideoThumbnails = async (video: HTMLVideoElement) => {
     if (!video) return
 
     const newSnapshots: { time: number; url: string }[] = []
-    const duration = video.duration // Get duration from video
+    const duration = video.duration
     const snapshotCount = Math.max(10, Math.ceil(duration / 5))
 
     const currentTime = video.currentTime
@@ -60,16 +59,6 @@ export const generateVideoThumbnails = async (video: HTMLVideoElement) => {
     return newSnapshots
   }
 
-export const generateWaveform = (duration: number): number[] => {
-  // Mock waveform generation
-  const waveform = []
-  const samples = 100
-  for (let i = 0; i < samples; i++) {
-    waveform.push(Math.random() * 0.8 + 0.2) // Random values between 0.2 and 1
-  }
-  return waveform
-}
-
 export const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = Math.floor(seconds % 60)
@@ -78,7 +67,6 @@ export const formatTime = (seconds: number): string => {
 
 export const generateSceneThumbnails = (videoUrl: string, duration: number, count = 5): Promise<string[]> => {
   return new Promise((resolve) => {
-    // Mock scene thumbnail generation
     const thumbnails: string[] = []
     const video = document.createElement("video")
     video.src = videoUrl
