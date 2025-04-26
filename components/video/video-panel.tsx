@@ -7,7 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import VideoUpload from "./video-upload"
 import { Film, ImageIcon, Music, Trash2, Upload, Video } from "lucide-react"
-import { setActiveVideo, removeVideo } from "@/lib/store/slices/videoSlice"
+import { setActiveVideo, removeVideo, resetVideo } from "@/lib/store/slices/videoSlice"
+import { resetAudio } from "@/lib/store/slices/audioSlice"
+import { resetTimeline } from "@/lib/store/slices/timelineSlice"
+import { resetSubtitles } from "@/lib/store/slices/subtitleSlice"
+import { resetOverlays } from "@/lib/store/slices/overlaySlice"
 
 interface VideoItemProps {
     id: string
@@ -65,8 +69,12 @@ export default function VideoPanel() {
     const { videos, activeVideoId } = useAppSelector((state) => state.video)
     const { images } = useAppSelector((state) => state.overlay)
 
-    const handleRemoveVideo = (id: string) => {
-        dispatch(removeVideo(id))
+    const handleRemoveVideo = () => {
+        dispatch(resetVideo())
+        dispatch(resetTimeline())
+        dispatch(resetAudio())
+        dispatch(resetSubtitles())
+        dispatch(resetOverlays())
     }
 
     const handleSelectVideo = (id: string) => {
@@ -96,7 +104,7 @@ export default function VideoPanel() {
                                         name={video.name}
                                         size={video.size}
                                         isActive={video.id === activeVideoId}
-                                        onRemove={() => handleRemoveVideo(video.id)}
+                                        onRemove={handleRemoveVideo}
                                         onSelect={() => handleSelectVideo(video.id)}
                                     />
                                 ))

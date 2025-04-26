@@ -1,13 +1,13 @@
 "use client"
 
-import { Trash2, Volume2 } from "lucide-react"
-import { AudioSection } from "../../lib/types/timeline"
+import { Trash2, Volume2, VolumeX } from "lucide-react"
+import type { AudioSection } from "@/lib/types/timeline"
+import { useState } from "react"
 
 interface AudioTrackProps {
     audioSections: AudioSection[]
     duration: number
     onDragStart: (e: React.MouseEvent | React.TouchEvent, sectionId: string) => void
-    onResizeStart: (e: React.MouseEvent, sectionId: string, side: 'left' | 'right') => void
     onRemoveSection: (sectionId: string) => void
     activeDragId: string | null
 }
@@ -16,7 +16,6 @@ export default function AudioTrack({
     audioSections,
     duration,
     onDragStart,
-    onResizeStart,
     onRemoveSection,
     activeDragId
 }: AudioTrackProps) {
@@ -29,7 +28,6 @@ export default function AudioTrack({
                     section={section}
                     duration={duration}
                     onDragStart={(e) => onDragStart(e, section.id)}
-                    onResizeStart={onResizeStart}
                     onRemove={() => onRemoveSection(section.id)}
                     isBeingDragged={activeDragId === section.id}
                 />
@@ -49,28 +47,28 @@ function AudioSection({
     section,
     duration,
     onDragStart,
-    onResizeStart,
     onRemove,
     isBeingDragged
 }: {
     section: AudioSection
     duration: number
     onDragStart: (e: React.MouseEvent | React.TouchEvent) => void
-    onResizeStart: (e: React.MouseEvent, sectionId: string, side: 'left' | 'right') => void
     onRemove: () => void
     isBeingDragged: boolean
 }) {
     // Calculate section position and width as percentages
     const left = (section.startTime / duration) * 100
     const width = ((section.endTime - section.startTime) / duration) * 100
+    const [isMuted, setIsMuted] = useState(section.muted || false)
 
     // Handle mouse down on section (for dragging)
     const handleMouseDown = (e: React.MouseEvent) => {
-        // Prevent if clicking on a handle or the delete button
+        // Prevent if clicking on buttons
         if (
-            (e.target as HTMLElement).classList.contains('resize-handle') ||
             (e.target as HTMLElement).classList.contains('delete-button') ||
-            (e.target as HTMLElement).closest('.delete-button')
+            (e.target as HTMLElement).closest('.delete-button') ||
+            (e.target as HTMLElement).classList.contains('mute-button') ||
+            (e.target as HTMLElement).closest('.mute-button')
         ) {
             return
         }
@@ -88,7 +86,7 @@ function AudioSection({
                 {section.waveform.data.map((value, index) => (
                     <div
                         key={index}
-                        className="bg-green-400 w-[1px] mx-[0.5px]"
+                        className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[1px] mx-[0.5px]`}
                         style={{ height: `${value * 70}%` }}
                     />
                 ))}
@@ -96,9 +94,16 @@ function AudioSection({
         );
     };
 
+    const handleToggleMute = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsMuted(!isMuted);
+        console.log(`Toggle mute for section ${section.id}`);
+        console.log(!isMuted);
+    };
+
     return (
         <div
-            className={`absolute top-0 h-full bg-green-800/90 border-x-[12px] border-y-4 border-green-500 rounded cursor-move flex items-center ${isBeingDragged ? 'ring-2 ring-white z-10' : ''
+            className={`absolute top-0 h-full ${isMuted ? 'bg-gray-600/90 border-gray-500' : 'bg-green-800/90 border-green-500'} border-x-[12px] border-y-4 rounded cursor-move flex items-center ${isBeingDragged ? 'ring-2 ring-white z-10' : ''
                 }`}
             style={{
                 left: `${left}%`,
@@ -121,15 +126,33 @@ function AudioSection({
                 <Trash2 size={12} />
             </button>
 
+            {/* Mute button */}
+            <button
+                className="mute-button absolute -top-0 right-6 bg-blue-500 text-white rounded-full p-1 opacity-80 hover:opacity-100 z-10"
+                onClick={handleToggleMute}
+            >
+                {isMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
+            </button>
+
             {/* Audio icon */}
-            <Volume2
-                className="absolute left-2 top-2 text-white/80 z-10"
-                size={14}
-            />
+            {isMuted ? (
+                <VolumeX
+                    className="absolute left-2 top-2 text-white/80 z-10"
+                    size={14}
+                />
+            ) : (
+                <Volume2
+                    className="absolute left-2 top-2 text-white/80 z-10"
+                    size={14}
+                />
+            )}
 
             {/* Section duration */}
             <span className="text-xs text-white font-mono px-2 py-1 bg-black/50 rounded absolute bottom-1 left-1/2 transform -translate-x-1/2 z-10">
-                {((section.endTime - section.startTime).toFixed(1))}s
+                {section.endTime - section.startTime >= 60
+                    ? `${Math.floor((section.endTime - section.startTime) / 60)}m ${((section.endTime - section.startTime) % 60).toFixed(0)}s`
+                    : `${(section.endTime - section.startTime).toFixed(1)}s`
+                }
             </span>
         </div>
     )

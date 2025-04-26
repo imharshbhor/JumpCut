@@ -3,20 +3,16 @@
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
 import { setZoom } from "@/lib/store/slices/timelineSlice"
 import {
-    Music, ScissorsLineDashed, ZoomIn, ZoomOut as ZoomOutIcon
+    Scissors, ZoomIn, ZoomOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface TimelineControlsProps {
     onSplitAtPlayhead: () => void
-    showAudioTrack: boolean
-    setShowAudioTrack: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function TimelineControls({
-    onSplitAtPlayhead,
-    showAudioTrack,
-    setShowAudioTrack
+    onSplitAtPlayhead
 }: TimelineControlsProps) {
     const dispatch = useAppDispatch()
     const { zoom } = useAppSelector((state) => state.timeline)
@@ -25,14 +21,42 @@ export default function TimelineControls({
     const handleZoomOut = () => dispatch(setZoom(Math.max(zoom - 0.2, 0.5)))
 
     return (
-        <div className="flex space-x-2 mb-2 bg-secondary p-2 rounded-xl justify-between">
-            <div className="flex items-center space-x-2 pl-2">
-                    <ScissorsLineDashed className="cursor-pointer" size={20} onClick={onSplitAtPlayhead}/>
-            </div>
+        <div className="flex justify-end items-center w-full">
+            <div className="flex space-x-2">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onSplitAtPlayhead}
+                    title="Split at Playhead"
+                    className="group relative flex items-center gap-1"
+                >
+                    <Scissors className="h-4 w-4" />
+                    <span className="text-xs">Split</span>
+                    <span className="sr-only">Split at Playhead</span>
+                    <span className="absolute hidden group-hover:inline-block bg-secondary text-xs px-2 py-1 rounded -bottom-8 whitespace-nowrap">
+                        Split at Playhead
+                    </span>
+                </Button>
 
-            <div className="flex items-center space-x-2 pr-2">
-                    <ZoomIn size={16} className="cursor-pointer" onClick={handleZoomIn}/>
-                    <ZoomOutIcon size={16} className="cursor-pointer" onClick={handleZoomOut}/>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleZoomIn}
+                    title="Zoom In (+)"
+                    className="group relative flex items-center gap-1"
+                >
+                    <ZoomIn className="h-4 w-4" />
+                </Button>
+
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleZoomOut}
+                    title="Zoom Out (-)"
+                    className="group relative flex items-center gap-1"
+                >
+                    <ZoomOut className="h-4 w-4" />
+                </Button>
             </div>
         </div>
     )

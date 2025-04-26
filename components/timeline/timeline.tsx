@@ -1,22 +1,21 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useCallback } from "react"
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks"
 import { setCurrentTime, setIsPlaying } from "@/lib/store/slices/timelineSlice"
+import { setSnapshots } from "@/lib/store/slices/videoSlice"
 import { v4 as uuidv4 } from "uuid"
 import { store } from "@/lib/store/store"
 
-// Import our new components and hooks
+// Import our components and hooks
 import Playhead from "./playhead"
 import TimelineControls from "./timeline-controls"
 import TimelineMarkers from "./timeline-markers"
 import VideoTrack from "./video-track"
 import AudioTrack from "./audio-track"
-import { useDragLogic } from "../../hooks/useDragLogic"
-import { useResizeLogic } from "../../hooks/useResizeLogic"
-import { useSnapLogic } from "../../hooks/useSnapLogic"
-import { useSplitAndSnap } from "../../hooks/useSplitAndSnap"
-import { TimelineSection, AudioSection } from "../../lib/types/timeline"
+import { useDragLogic } from "@/hooks/useDragLogic"
+import { useSplitAndSnap } from "@/hooks/useSplitAndSnap"
+import { TimelineSection, AudioSection, VideoSnapshot } from "@/lib/types/timeline"
 
 export default function Timeline() {
     const dispatch = useAppDispatch()
@@ -28,7 +27,7 @@ export default function Timeline() {
     // State for sections
     const [sections, setSections] = useState<TimelineSection[]>([])
     const [audioSections, setAudioSections] = useState<AudioSection[]>([])
-    const [showAudioTrack, setShowAudioTrack] = useState(true)
+    const [showAudioTrack] = useState(true)
 
     // Create an initial section if none exists and we have a video loaded
     useEffect(() => {
@@ -81,7 +80,7 @@ export default function Timeline() {
         const relativeX = offsetX / scrollableWidth;
 
         return relativeX * duration;
-      };
+    };
 
     // Initialize video refs
     useEffect(() => {
@@ -167,11 +166,32 @@ export default function Timeline() {
         dispatch(setCurrentTime(newTime))
     }
 
-    // Initialize drag logic
+    // Handle section movement - update snapshots
+    const handleSectionMove = (sectionId: string, oldStartTime: number, oldEndTime: number, newStartTime: number, newEndTime: number) => {
+        if (!snapshots || !Array.isArray(snapshots) || snapshots.length === 0) return;
+
+        // Calculate the time shift
+        const timeShift = newStartTime - oldStartTime;
+
+        // Update snapshots that were within this section
+        const updatedSnapshots = (snapshots as VideoSnapshot[]).map(snapshot => {
+            // If snapshot was in the original section bounds, move it with the section
+            if (snapshot.time >= oldStartTime && snapshot.time <= oldEndTime) {
+                return {
+                    ...snapshot,
+                    time: snapshot.time + timeShift
+                };
+            }
+            return snapshot;
+        });
+
+        // Update the snapshots in the store
+        dispatch(setSnapshots(updatedSnapshots));
+    };
+
+    // Initialize drag logic with snapshot update callback
     const {
         activeDragId,
-        isDraggingSection,
-        currentDragSection,
         handleDragStart
     } = useDragLogic(
         sections,
@@ -179,24 +199,9 @@ export default function Timeline() {
         audioSections,
         setAudioSections,
         duration,
-        snapshots || [],
-        getTimeFromMousePosition
-    )
-
-    // Initialize resize logic
-    const {
-        isResizingSection,
-        resizeSide,
-        resizeSection,
-        handleSectionResizeStart
-    } = useResizeLogic(
-        sections,
-        setSections,
-        audioSections,
-        setAudioSections,
-        duration,
-        snapshots || [],
-        getTimeFromMousePosition
+        snapshots as VideoSnapshot[] | undefined,
+        getTimeFromMousePosition,
+        handleSectionMove
     )
 
     // Initialize split and snap logic
@@ -208,7 +213,8 @@ export default function Timeline() {
         setSections,
         audioSections,
         setAudioSections,
-        currentTime
+        currentTime,
+        undefined // No saveToHistory function needed
     )
 
     // Remove a section
@@ -216,8 +222,23 @@ export default function Timeline() {
         // Check if it's a video section
         const videoSection = sections.find(s => s.id === sectionId);
         if (videoSection) {
+            // Capture section bounds before removing
+            const { startTime, endTime } = videoSection;
+
             // Remove the section
             setSections(prevSections => prevSections.filter(s => s.id !== sectionId));
+
+            // Remove any snapshots that were in this section's time range
+            if (snapshots && Array.isArray(snapshots) && snapshots.length > 0) {
+                const updatedSnapshots = (snapshots as VideoSnapshot[]).filter(
+                    snapshot => !(snapshot.time >= startTime && snapshot.time <= endTime)
+                );
+
+                // Only dispatch if snapshots were actually removed
+                if (updatedSnapshots.length !== snapshots.length) {
+                    dispatch(setSnapshots(updatedSnapshots));
+                }
+            }
 
             // If it has a linked audio section, remove that too
             if (videoSection.isLinkedToAudio && videoSection.linkedAudioId) {
@@ -247,14 +268,45 @@ export default function Timeline() {
         }
     };
 
-        return (
+    // Handle keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Don't trigger shortcuts when user is typing in an input/textarea
+            if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+                return;
+            }
+
+            // Split at playhead: S
+            if (e.key === 's' && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+                e.preventDefault();
+                handleSplitAtPlayhead();
+            }
+
+            // Zoom in: + or =
+            if (e.key === '+' || e.key === '=' || e.key === 'NumpadAdd') {
+                e.preventDefault();
+                dispatch({ type: 'timeline/setZoom', payload: Math.min(zoom + 0.2, 2) });
+            }
+
+            // Zoom out: - or _
+            if (e.key === '-' || e.key === '_' || e.key === 'NumpadSubtract') {
+                e.preventDefault();
+                dispatch({ type: 'timeline/setZoom', payload: Math.max(zoom - 0.2, 0.5) });
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleSplitAtPlayhead, zoom, dispatch]);
+
+    return (
         <div className="w-full">
             {/* Timeline Controls */}
-            <TimelineControls
-                onSplitAtPlayhead={handleSplitAtPlayhead}
-                showAudioTrack={showAudioTrack}
-                setShowAudioTrack={setShowAudioTrack}
-            />
+            <div className="mb-2">
+                <TimelineControls
+                    onSplitAtPlayhead={handleSplitAtPlayhead}
+                />
+            </div>
 
             {/* Timeline */}
             <div
@@ -274,9 +326,8 @@ export default function Timeline() {
                     <VideoTrack
                         sections={sections}
                         snapshots={snapshots}
-                            duration={duration}
+                        duration={duration}
                         onDragStart={handleDragStart}
-                            onResizeStart={handleSectionResizeStart}
                         onRemoveSection={handleRemoveSection}
                         activeDragId={activeDragId}
                     />
@@ -285,8 +336,7 @@ export default function Timeline() {
                     <AudioTrack
                         audioSections={audioSections}
                         duration={duration}
-            onDragStart={handleDragStart}
-                        onResizeStart={handleSectionResizeStart}
+                        onDragStart={handleDragStart}
                         onRemoveSection={handleRemoveSection}
                         activeDragId={activeDragId}
                     />

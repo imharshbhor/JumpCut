@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { TimelineSection, AudioSection } from "../lib/types/timeline";
+import { TimelineSection, AudioSection, VideoSnapshot } from "../lib/types/timeline";
 import { useSnapLogic } from "@/hooks/useSnapLogic";
 
 export function useDragLogic(
@@ -8,19 +8,21 @@ export function useDragLogic(
   audioSections: AudioSection[],
   setAudioSections: React.Dispatch<React.SetStateAction<AudioSection[]>>,
   duration: number,
-  snapshots: any,
-  getTimeFromMousePosition: (clientX: number) => number
+  snapshots: VideoSnapshot[] | undefined | null,
+  getTimeFromMousePosition: (clientX: number) => number,
+  onSectionMove?: (sectionId: string, oldStartTime: number, oldEndTime: number, newStartTime: number, newEndTime: number) => void
 ) {
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [isDraggingSection, setIsDraggingSection] = useState(false);
   const [currentDragSection, setCurrentDragSection] = useState<TimelineSection | null>(null);
   const [dragOffset, setDragOffset] = useState<number>(0);
+  const originalSectionRef = useRef<{startTime: number, endTime: number} | null>(null);
 
   // Integrate with snap logic
   const { findNearestSnapPoint, clearSnapPoint } = useSnapLogic(
     sections,
     audioSections,
-    snapshots,
+    snapshots || undefined,
     duration
   );
 
@@ -35,6 +37,12 @@ export function useDragLogic(
     // Find the section being dragged
     const section = sections.find(s => s.id === sectionId);
     if (!section) return;
+
+    // Store original start and end times for later reference
+    originalSectionRef.current = {
+      startTime: section.startTime,
+      endTime: section.endTime
+    };
 
     // Calculate drag offset based on where the user clicked within the section
     const clientX = 'touches' in event
@@ -107,10 +115,25 @@ export function useDragLogic(
     };
 
     const handleDragEnd = () => {
+      // Call the section move callback if it exists
+      if (onSectionMove && originalSectionRef.current) {
+        const currentSection = sections.find(s => s.id === sectionId);
+        if (currentSection) {
+          onSectionMove(
+            sectionId,
+            originalSectionRef.current.startTime,
+            originalSectionRef.current.endTime,
+            currentSection.startTime,
+            currentSection.endTime
+          );
+        }
+      }
+
       // Clear dragging state
       setActiveDragId(null);
       setIsDraggingSection(false);
       setCurrentDragSection(null);
+      originalSectionRef.current = null;
       clearSnapPoint();
 
       // Remove event listeners

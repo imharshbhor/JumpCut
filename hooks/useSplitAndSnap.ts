@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from "uuid"
-import { TimelineSection, AudioSection, SectionedWaveform } from "../lib/types/timeline"
+import { TimelineSection, AudioSection, SectionedWaveform, VideoSnapshot } from "@/lib/types/timeline"
 
 export function useSplitAndSnap(
   sections: TimelineSection[],
   setSections: React.Dispatch<React.SetStateAction<TimelineSection[]>>,
   audioSections: AudioSection[],
   setAudioSections: React.Dispatch<React.SetStateAction<AudioSection[]>>,
-  currentTime: number
+  currentTime: number,
+  saveToHistory?: null // This param is kept for backward compatibility but is not used anymore
 ) {
   // Generate an audio waveform for a given time range
   const generateSectionWaveform = (
