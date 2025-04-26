@@ -49,7 +49,7 @@ export function useSnapLogic(
     if (snappingPoints.length === 0) return time;
 
     let closest = time;
-    let minDistance = SNAP_THRESHOLD + 0.1; // Initialize with value greater than threshold
+    let minDistance = SNAP_THRESHOLD + 0.1;
 
     if (prioritizeSections) {
       const sectionBoundaries = sections.flatMap(section => [section.startTime, section.endTime]);

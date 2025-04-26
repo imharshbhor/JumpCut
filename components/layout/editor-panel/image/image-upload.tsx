@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Trash2, ImageIcon } from "lucide-react"
 import { formatTime } from "@/lib/utils/video-utils"
-import { ImageOverlay } from "@/lib/store/slices/overlaySlice"
+import { ImageOverlay } from "@/lib/store/slices/imageSlice"
 
 export interface ImageUploadProps {
     getRootProps: any

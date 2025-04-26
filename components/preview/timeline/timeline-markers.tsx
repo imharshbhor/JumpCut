@@ -9,11 +9,7 @@ interface TimelineMarkersProps {
 
 export default function TimelineMarkers({ duration, zoom }: TimelineMarkersProps) {
     const getMarkerInterval = () => {
-        if (duration <= 30) return 5;
-        if (duration <= 60) return 10;
-        if (duration <= 300) return 15;
-        if (duration <= 900) return 30;
-        return 300;
+        return 5;
     }
 
     const interval = getMarkerInterval();

@@ -12,13 +12,13 @@ export default function EmptyTimeline() {
 
                         <div className="flex flex-col">
 
-                            <div className="flex relative h-24 bg-gray-50 dark:bg-gray-800">
+                            <div className="flex relative h-24 bg-gray-200 dark:bg-gray-800">
                                 <div className="flex-1 relative h-full overflow-hidden">
 
                                 </div>
                             </div>
 
-                            <div className="flex items-center h-24 relative bg-gray-50 dark:bg-gray-800 px-4">
+                            <div className="flex items-center h-24 relative bg-gray-200 dark:bg-gray-800 px-4">
                             </div>
                         </div>
                     </div>

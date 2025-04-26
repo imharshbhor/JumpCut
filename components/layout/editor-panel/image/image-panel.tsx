@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useAppSelector, useAppDispatch } from "@/lib/store/hooks"
-import { addImageOverlay, removeImageOverlay, updateImageOverlay, ImageOverlay } from "@/lib/store/slices/overlaySlice"
+import { addImageOverlay, removeImageOverlay, updateImageOverlay, ImageOverlay } from "@/lib/store/slices/imageSlice"
 import { v4 as uuidv4 } from "uuid"
 import { useDropzone } from "react-dropzone"
 import { ImagesIcon } from "lucide-react"

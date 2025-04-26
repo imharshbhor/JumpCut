@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { TimelineSection, AudioSection, VideoSnapshot } from "../../components/preview/timeline/timeline";
+import { TimelineSection, AudioSection, VideoSnapshot } from "../../components/preview/timeline/types";
 import { useSnapLogic } from "@/hooks/timeline-hooks/use-snap-logic";
 
 export function useDragLogic(

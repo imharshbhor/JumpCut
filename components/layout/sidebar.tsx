@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Film, ImageIcon, Type, Music } from "lucide-react"
+import { Film, Type, Music, ImagesIcon } from "lucide-react"
 import { AuroraText } from "../ui/aurora-text"
 
 interface SidebarProps {
@@ -47,7 +47,7 @@ export default function Sidebar({ activePanel, setActivePanel }: SidebarProps) {
                             className="flex flex-col h-18 w-full items-center justify-center"
                             onClick={() => handlePanelChange("image")}
                         >
-                            <ImageIcon className="!h-6 !w-6" />
+                            <ImagesIcon className="!h-6 !w-6" />
                             <span className="text-xs">Images</span>
                         </Button>
                         <Button

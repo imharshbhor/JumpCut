@@ -18,7 +18,7 @@ export const generateThumbnail = async (videoFile: File): Promise<string> => {
   })
 }
 
-export const generateVideoThumbnails = async (video: HTMLVideoElement) => {
+export const generateSnapshots = async (video: HTMLVideoElement) => {
     if (!video) return
 
     const newSnapshots: { time: number; url: string }[] = []
@@ -63,34 +63,4 @@ export const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = Math.floor(seconds % 60)
   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
-}
-
-export const generateSceneThumbnails = (videoUrl: string, duration: number, count = 5): Promise<string[]> => {
-  return new Promise((resolve) => {
-    const thumbnails: string[] = []
-    const video = document.createElement("video")
-    video.src = videoUrl
-
-    let processed = 0
-
-    for (let i = 0; i < count; i++) {
-      const time = (duration / count) * i
-      video.currentTime = time
-
-      video.onseeked = () => {
-        const canvas = document.createElement("canvas")
-        canvas.width = 160
-        canvas.height = 90
-        const ctx = canvas.getContext("2d")
-        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height)
-        thumbnails.push(canvas.toDataURL("image/jpeg"))
-
-        processed++
-        if (processed === count) {
-          URL.revokeObjectURL(video.src)
-          resolve(thumbnails)
-        }
-      }
-    }
-  })
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { Clock } from "lucide-react"
-import { ImageOverlay } from "@/lib/store/slices/overlaySlice"
+import { ImageOverlay } from "@/lib/store/slices/imageSlice"
 import TimingControls from "@/components/shared/timing-controls"
 
 export interface ImageTimingProps {

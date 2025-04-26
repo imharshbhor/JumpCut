@@ -21,34 +21,13 @@ export interface ImageOverlay {
   }
 }
 
-export interface TextOverlay {
-  id: string
-  text: string
-  position: { x: number; y: number }
-  style: {
-    fontFamily: string
-    fontSize: number
-    color: string
-    backgroundColor: string
-    opacity: number
-    bold: boolean
-    italic: boolean
-    underline: boolean
-  }
-  startTime: number
-  endTime: number
-  zIndex: number
-}
-
 export interface OverlayState {
   images: ImageOverlay[]
-  texts: TextOverlay[]
   selectedOverlayId: string | null
 }
 
 const initialState: OverlayState = {
   images: [],
-  texts: [],
   selectedOverlayId: null,
 }
 
@@ -68,22 +47,7 @@ const overlaySlice = createSlice({
         state.images[index] = { ...state.images[index], ...action.payload }
       }
     },
-    addTextOverlay: (state, action: PayloadAction<TextOverlay>) => {
-      state.texts.push(action.payload)
-    },
-    removeTextOverlay: (state, action: PayloadAction<string>) => {
-      state.texts = state.texts.filter((text) => text.id !== action.payload)
-    },
-    updateTextOverlay: (state, action: PayloadAction<Partial<TextOverlay> & { id: string }>) => {
-      const index = state.texts.findIndex((text) => text.id === action.payload.id)
-      if (index !== -1) {
-        state.texts[index] = { ...state.texts[index], ...action.payload }
-      }
-    },
-    setSelectedOverlay: (state, action: PayloadAction<string | null>) => {
-      state.selectedOverlayId = action.payload
-    },
-    resetOverlays: () => initialState,
+    resetImages: () => initialState,
   },
 })
 
@@ -91,11 +55,7 @@ export const {
   addImageOverlay,
   removeImageOverlay,
   updateImageOverlay,
-  addTextOverlay,
-  removeTextOverlay,
-  updateTextOverlay,
-  setSelectedOverlay,
-  resetOverlays,
+  resetImages,
 } = overlaySlice.actions
 
 export default overlaySlice.reducer

@@ -10,7 +10,7 @@ import { setActiveVideo, resetVideo } from "@/lib/store/slices/videoSlice"
 import { resetAudio } from "@/lib/store/slices/audioSlice"
 import { resetTimeline } from "@/lib/store/slices/timelineSlice"
 import { resetSubtitles } from "@/lib/store/slices/subtitleSlice"
-import { resetOverlays } from "@/lib/store/slices/overlaySlice"
+import { resetImages } from "@/lib/store/slices/imageSlice"
 
 interface VideoItemProps {
     id: string
@@ -66,14 +66,13 @@ function VideoItem({ thumbnail, name, size, isActive, onRemove, onSelect }: Vide
 export default function VideoPanel() {
     const dispatch = useAppDispatch()
     const { videos, activeVideoId } = useAppSelector((state) => state.video)
-    const { images } = useAppSelector((state) => state.overlay)
 
     const handleRemoveVideo = () => {
         dispatch(resetVideo())
         dispatch(resetTimeline())
         dispatch(resetAudio())
         dispatch(resetSubtitles())
-        dispatch(resetOverlays())
+        dispatch(resetImages())
     }
 
     const handleSelectVideo = (id: string) => {

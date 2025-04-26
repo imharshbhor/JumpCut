@@ -5,7 +5,7 @@ import { resetVideo } from "@/lib/store/slices/videoSlice"
 import { resetTimeline } from "@/lib/store/slices/timelineSlice"
 import { resetAudio } from "@/lib/store/slices/audioSlice"
 import { resetSubtitles } from "@/lib/store/slices/subtitleSlice"
-import { resetOverlays } from "@/lib/store/slices/overlaySlice"
+import { resetImages } from "@/lib/store/slices/imageSlice"
 import Sidebar from "@/components/layout/sidebar"
 import EditorHeader from "@/components/layout/header"
 import VideoPreview from "@/components/preview/player/video-preview"
@@ -34,7 +34,7 @@ export default function VideoEditor() {
         dispatch(resetTimeline())
         dispatch(resetAudio())
         dispatch(resetSubtitles())
-        dispatch(resetOverlays())
+        dispatch(resetImages())
     }
 
     return (

@@ -4,16 +4,16 @@ import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
 import { addVideoFile, setThumbnail, setVideoDuration, setProcessingComplete, setSnapshots, setSnapshotsLoading, } from "@/lib/store/slices/videoSlice"
-import { generateThumbnail, generateVideoThumbnails } from "@/lib/utils/video-utils"
+import { generateThumbnail, generateSnapshots } from "@/lib/utils/video-utils"
 import { Progress } from "@/components/ui/progress"
 import { Film } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function VideoUpload() {
 
-    const generateSnapshots = async (videoFile: HTMLVideoElement): Promise<any> => {
+    const generateVideoSnapshots = async (videoFile: HTMLVideoElement): Promise<any> => {
         dispatch(setSnapshotsLoading(true))
-        const snapshots = await generateVideoThumbnails(videoFile)
+        const snapshots = await generateSnapshots(videoFile)
         return snapshots
     }
 
@@ -63,7 +63,7 @@ export default function VideoUpload() {
                         video.onloadedmetadata = async () => {
                             dispatch(setVideoDuration(video.duration))
 
-                            const snapshots = await generateSnapshots(video)
+                            const snapshots = await generateVideoSnapshots(video)
                             dispatch(setSnapshots(snapshots))
                             dispatch(setProcessingComplete())
                         }

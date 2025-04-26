@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
-import { TimelineSection, AudioSection, SectionedWaveform, VideoSnapshot } from "@/components/preview/timeline/timeline"
+import { TimelineSection, AudioSection, SectionedWaveform } from "@/components/preview/timeline/types"
 
 export function useSplitAndSnap(
   sections: TimelineSection[],

@@ -158,7 +158,7 @@ export default function AudioControls({
 
             {expanded && (
                 <div className="p-2 pt-0 pb-3 border-t">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mt-4">
                         <Volume2 size={16} className="text-muted-foreground" />
                         <Slider
                             value={[track.volume * 100]}

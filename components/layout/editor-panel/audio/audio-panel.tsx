@@ -80,6 +80,7 @@ export default function AudioPanel() {
             const selectedTrack = audioFiles.find(track => track.id === selectedAudioId)
             if (selectedTrack) {
                 dispatch(addAudioTrack(selectedTrack))
+                console.log(selectedTrack)
             }
         }
     }

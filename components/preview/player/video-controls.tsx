@@ -40,7 +40,7 @@ export default function VideoControls({
                         {formatTime(currentTime)} / {formatTime(duration)}
                     </div>
 
-                    <div className="flex items-center space-x-2 ml-5">
+                    <div className="flex items-center space-x-2 ml-[2.3rem]">
                         <Button
                             variant="ghost"
                             size="icon"
