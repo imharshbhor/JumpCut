@@ -74,7 +74,7 @@ export default function Playhead({ duration, getTimeFromMousePosition }: Playhea
 
         {/* Time label - only shown on hover */}
         {isHovering && (
-          <div className="absolute text-xs text-white font-mono mt-[-1.2rem] -translate-x-4 bg-red-700 px-1.5 py-0.5 rounded border border-red-500 text-center whitespace-nowrap cursor-ew-resize" style={{ left: `${playheadPosition}%` }}>
+          <div className="absolute text-xs text-white font-mono mt-[-1.2rem] -translate-x-[0.80rem] bg-red-700 px-1.5 py-0.5 rounded border border-red-500 text-center whitespace-nowrap cursor-ew-resize">
             {formatTime(currentTime)}
           </div>
         )}
