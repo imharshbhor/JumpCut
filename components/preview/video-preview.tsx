@@ -246,9 +246,9 @@ export default function VideoPreview() {
 
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.volume = isMuted ? 0 : volume;
+            videoRef.current.volume = isMuted ? 0 : volume
         }
-    }, [volume, isMuted]);
+    }, [volume, isMuted])
 
     const handleTimeUpdate = () => {
         if (videoRef.current && !isNaN(videoRef.current.currentTime)) {

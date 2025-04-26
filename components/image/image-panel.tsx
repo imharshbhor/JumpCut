@@ -9,7 +9,7 @@ import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-import { Trash2, ImageIcon, RotateCw, Clock, Move, Palette, Image } from "lucide-react"
+import { Trash2, ImageIcon, RotateCw, Clock, Move, Palette, ImagesIcon } from "lucide-react"
 import { Square } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
@@ -117,8 +117,8 @@ export default function ImagePanel() {
 
     return (
         <div className="space-y-4">
-             <div className="flex items-center gap-2">
-                <Image className="h-5 w-5 text-muted-foreground" />
+            <div className="flex items-center gap-2">
+                <ImagesIcon className="h-5 w-5 text-muted-foreground" />
                 <h2 className="text-lg font-medium">Image Manager</h2>
             </div>
             <Tabs defaultValue="upload">

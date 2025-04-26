@@ -2,7 +2,7 @@
 
 import { Trash2, Volume2, VolumeX } from "lucide-react"
 import type { AudioSection } from "@/lib/types/timeline"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 
 interface AudioTrackProps {
     audioSections: AudioSection[]
@@ -59,7 +59,7 @@ function AudioSection({
     // Calculate section position and width as percentages
     const left = (section.startTime / duration) * 100
     const width = ((section.endTime - section.startTime) / duration) * 100
-    const [isMuted, setIsMuted] = useState(section.muted || false)
+    const [isMuted, setIsMuted] = useState(false)
 
     // Handle mouse down on section (for dragging)
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -82,14 +82,68 @@ function AudioSection({
         }
 
         return (
-            <div className="absolute inset-0 flex items-center justify-around">
+            <div className="absolute inset-0 flex items-center justify-center gap-1">
+                {/* Repeat the waveform data mapping based on section size */}
                 {section.waveform.data.map((value, index) => (
                     <div
                         key={index}
-                        className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[1px] mx-[0.5px]`}
-                        style={{ height: `${value * 70}%` }}
+                        className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                        style={{ height: `${value * 50}%` }}
                     />
                 ))}
+                {/* For smaller sections, repeat once */}
+                {section.endTime - section.startTime < 2 && section.waveform.data.map((value, index) => (
+                    <div
+                        key={`repeat1-${index}`}
+                        className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                        style={{ height: `${value * 50}%` }}
+                    />
+                ))}
+                {/* For medium sections, repeat twice */}
+                {section.endTime - section.startTime >= 2 && section.endTime - section.startTime < 5 && (
+                    <>
+                        {section.waveform.data.map((value, index) => (
+                            <div
+                                key={`repeat1-${index}`}
+                                className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                                style={{ height: `${value * 50}%` }}
+                            />
+                        ))}
+                        {section.waveform.data.map((value, index) => (
+                            <div
+                                key={`repeat2-${index}`}
+                                className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                                style={{ height: `${value * 50}%` }}
+                            />
+                        ))}
+                    </>
+                )}
+                {/* For larger sections, repeat three times */}
+                {section.endTime - section.startTime >= 5 && (
+                    <>
+                        {section.waveform.data.map((value, index) => (
+                            <div
+                                key={`repeat1-${index}`}
+                                className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                                style={{ height: `${value * 50}%` }}
+                            />
+                        ))}
+                        {section.waveform.data.map((value, index) => (
+                            <div
+                                key={`repeat2-${index}`}
+                                className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                                style={{ height: `${value * 50}%` }}
+                            />
+                        ))}
+                        {section.waveform.data.map((value, index) => (
+                            <div
+                                key={`repeat3-${index}`}
+                                className={`${isMuted ? 'bg-gray-400' : 'bg-green-400'} w-[3px]`}
+                                style={{ height: `${value * 50}%` }}
+                            />
+                        ))}
+                    </>
+                )}
             </div>
         );
     };

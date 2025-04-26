@@ -149,10 +149,11 @@ export default function Timeline() {
     }, [currentTime, duration])
 
     // Handle click on timeline to seek
-    const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        const newTime = getTimeFromMousePosition(e.clientX)
-        dispatch(setCurrentTime(Math.min(Math.max(newTime, 0), duration)))
-    }
+    const handleTimelineClick = (e: React.MouseEvent) => {
+        if (!timelineRef.current) return;
+        const time = getTimeFromMousePosition(e.clientX);
+        dispatch(setCurrentTime(time));
+    };
 
     // Skip back 5 seconds
     const handleSkipBack = () => {
@@ -189,7 +190,7 @@ export default function Timeline() {
         dispatch(setSnapshots(updatedSnapshots));
     };
 
-    // Initialize drag logic with snapshot update callback
+    // Initialize drag logic
     const {
         activeDragId,
         handleDragStart
@@ -199,9 +200,8 @@ export default function Timeline() {
         audioSections,
         setAudioSections,
         duration,
-        snapshots as VideoSnapshot[] | undefined,
-        getTimeFromMousePosition,
-        handleSectionMove
+        undefined,
+        getTimeFromMousePosition
     )
 
     // Initialize split and snap logic
@@ -222,23 +222,8 @@ export default function Timeline() {
         // Check if it's a video section
         const videoSection = sections.find(s => s.id === sectionId);
         if (videoSection) {
-            // Capture section bounds before removing
-            const { startTime, endTime } = videoSection;
-
             // Remove the section
             setSections(prevSections => prevSections.filter(s => s.id !== sectionId));
-
-            // Remove any snapshots that were in this section's time range
-            if (snapshots && Array.isArray(snapshots) && snapshots.length > 0) {
-                const updatedSnapshots = (snapshots as VideoSnapshot[]).filter(
-                    snapshot => !(snapshot.time >= startTime && snapshot.time <= endTime)
-                );
-
-                // Only dispatch if snapshots were actually removed
-                if (updatedSnapshots.length !== snapshots.length) {
-                    dispatch(setSnapshots(updatedSnapshots));
-                }
-            }
 
             // If it has a linked audio section, remove that too
             if (videoSection.isLinkedToAudio && videoSection.linkedAudioId) {
@@ -246,24 +231,23 @@ export default function Timeline() {
                     prevAudioSections.filter(as => as.id !== videoSection.linkedAudioId)
                 );
             }
-        } else {
-            // Must be an audio section
-            const audioSection = audioSections.find(s => s.id === sectionId);
-            if (audioSection) {
-                setAudioSections(prevAudioSections =>
-                    prevAudioSections.filter(as => as.id !== sectionId)
-                );
+        }
+        // Must be an audio section
+        const audioSection = audioSections.find(s => s.id === sectionId);
+        if (audioSection) {
+            setAudioSections(prevAudioSections =>
+                prevAudioSections.filter(as => as.id !== sectionId)
+            );
 
-                // If linked to video, update the video section to remove the link
-                if (audioSection.isLinkedToVideo && audioSection.linkedVideoId) {
-                    setSections(prevSections =>
-                        prevSections.map(vs =>
-                            vs.id === audioSection.linkedVideoId
-                                ? { ...vs, isLinkedToAudio: false, linkedAudioId: undefined }
-                                : vs
-                        )
-                    );
-                }
+            // If linked to video, update the video section to remove the link
+            if (audioSection.isLinkedToVideo && audioSection.linkedVideoId) {
+                setSections(prevSections =>
+                    prevSections.map(vs =>
+                        vs.id === audioSection.linkedVideoId
+                            ? { ...vs, isLinkedToAudio: false, linkedAudioId: undefined }
+                            : vs
+                    )
+                );
             }
         }
     };
